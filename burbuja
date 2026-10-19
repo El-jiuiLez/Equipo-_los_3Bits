@@ -1,0 +1,128 @@
+import java.util.Arrays;
+
+public class Ordenamiento {
+
+
+    static void burbujaEnteros(int[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            boolean huboCambio = false;
+            for (int j = 0; j < a.length - 1 - i; j++) {
+                if (a[j] > a[j + 1]) {
+                    int temp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = temp;
+                    huboCambio = true;
+                }
+            }
+            if (!huboCambio) break; // ya está ordenado
+        }
+    }
+
+    static void burbujaCaracteres(char[] a) {
+        for (int i = 0; i < a.length - 1; i++) {
+            boolean huboCambio = false;
+            for (int j = 0; j < a.length - 1 - i; j++) {
+                if (a[j] > a[j + 1]) { 
+                    char temp = a[j];
+                    a[j] = a[j + 1];
+                    a[j + 1] = temp;
+                    huboCambio = true;
+                }
+            }
+            if (!huboCambio) break;
+        }
+    }
+
+
+    static class Alumno implements Comparable<Alumno> {
+        private String nombre;
+        private double promedio;
+
+        public Alumno(String nombre, double promedio) {
+            this.nombre = nombre;
+            this.promedio = promedio;
+        }
+
+        public String getNombre() { return nombre; }
+        public double getPromedio() { return promedio; }
+
+        @Override
+        public int compareTo(Alumno otro) {
+            return Double.compare(this.promedio, otro.promedio);
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + promedio + ")";
+        }
+    }
+
+
+    static class Burbuja<T extends Comparable<T>> {
+        private T[] datos;
+
+        public Burbuja(T[] datos) {
+            this.datos = datos;
+        }
+
+        public void ordenar() {
+            for (int i = 0; i < datos.length - 1; i++) {
+                boolean huboCambio = false;
+                for (int j = 0; j < datos.length - 1 - i; j++) {
+                    if (datos[j].compareTo(datos[j + 1]) > 0) {
+                        T temp = datos[j];
+                        datos[j] = datos[j + 1];
+                        datos[j + 1] = temp;
+                        huboCambio = true;
+                    }
+                }
+                if (!huboCambio) break;
+            }
+        }
+
+        public void mostrar() {
+            System.out.println(Arrays.toString(datos));
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+        System.out.println("=== ESTRUCTURADA ===");
+
+        int[] numeros = {64, 34, 25, 12, 22, 11, 90};
+        System.out.println("Enteros antes:   " + Arrays.toString(numeros));
+        burbujaEnteros(numeros);
+        System.out.println("Enteros después: " + Arrays.toString(numeros));
+
+        char[] letras = {'m', 'z', 'a', 'k', 'c'};
+        System.out.println("Chars antes:     " + Arrays.toString(letras));
+        burbujaCaracteres(letras);
+        System.out.println("Chars después:   " + Arrays.toString(letras));
+
+        System.out.println("\n=== POO ===");
+
+        Integer[] enteros = {5, 3, 8, 1, 9, 2};
+        Burbuja<Integer> bEnteros = new Burbuja<>(enteros);
+        bEnteros.ordenar();
+        System.out.print("Enteros:    ");
+        bEnteros.mostrar();
+
+        Character[] caracteres = {'x', 'b', 'q', 'a'};
+        Burbuja<Character> bChars = new Burbuja<>(caracteres);
+        bChars.ordenar();
+        System.out.print("Caracteres: ");
+        bChars.mostrar();
+
+        Alumno[] alumnos = {
+            new Alumno("Ana", 9.5),
+            new Alumno("Luis", 7.8),
+            new Alumno("Marta", 8.6),
+            new Alumno("Pedro", 6.9)
+        };
+        Burbuja<Alumno> bAlumnos = new Burbuja<>(alumnos);
+        bAlumnos.ordenar();
+        System.out.print("Alumnos:    ");
+        bAlumnos.mostrar();
+    }
+}

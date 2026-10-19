@@ -1,0 +1,217 @@
+import java.util.Arrays;
+
+
+public class MergeSortIndirecto {
+
+
+    static int[] crearIndices(int n) {
+        int[] idx = new int[n];
+        for (int i = 0; i < n; i++) {
+            idx[i] = i;
+        }
+        return idx;
+    }
+
+
+    static void mergeSortIndirectoEnteros(int[] datos, int[] idx, int izq, int der) {
+        if (izq >= der) return; // caso base: 0 o 1 elemento
+        int medio = (izq + der) / 2;
+        mergeSortIndirectoEnteros(datos, idx, izq, medio);
+        mergeSortIndirectoEnteros(datos, idx, medio + 1, der);
+        mezclarIndirectoEnteros(datos, idx, izq, medio, der);
+    }
+
+    static void mezclarIndirectoEnteros(int[] datos, int[] idx, int izq, int medio, int der) {
+        
+        int[] izqIdx = Arrays.copyOfRange(idx, izq, medio + 1);
+        int[] derIdx = Arrays.copyOfRange(idx, medio + 1, der + 1);
+        int i = 0, j = 0, k = izq;
+
+        while (i < izqIdx.length && j < derIdx.length) {
+            // se comparan los datos, pero se acomodan los índices
+            if (datos[izqIdx[i]] <= datos[derIdx[j]]) idx[k++] = izqIdx[i++];
+            else                                      idx[k++] = derIdx[j++];
+        }
+        while (i < izqIdx.length) idx[k++] = izqIdx[i++];
+        while (j < derIdx.length) idx[k++] = derIdx[j++];
+    }
+
+    static void mostrarEnteros(int[] datos, int[] idx) {
+        System.out.print("[");
+        for (int i = 0; i < idx.length; i++) {
+            System.out.print(datos[idx[i]]);
+            if (i < idx.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+
+    static void mergeSortIndirectoCaracteres(char[] datos, int[] idx, int izq, int der) {
+        if (izq >= der) return;
+        int medio = (izq + der) / 2;
+        mergeSortIndirectoCaracteres(datos, idx, izq, medio);
+        mergeSortIndirectoCaracteres(datos, idx, medio + 1, der);
+        mezclarIndirectoCaracteres(datos, idx, izq, medio, der);
+    }
+
+    static void mezclarIndirectoCaracteres(char[] datos, int[] idx, int izq, int medio, int der) {
+        int[] izqIdx = Arrays.copyOfRange(idx, izq, medio + 1);
+        int[] derIdx = Arrays.copyOfRange(idx, medio + 1, der + 1);
+        int i = 0, j = 0, k = izq;
+
+        while (i < izqIdx.length && j < derIdx.length) {
+            if (datos[izqIdx[i]] <= datos[derIdx[j]]) idx[k++] = izqIdx[i++];
+            else                                      idx[k++] = derIdx[j++];
+        }
+        while (i < izqIdx.length) idx[k++] = izqIdx[i++];
+        while (j < derIdx.length) idx[k++] = derIdx[j++];
+    }
+
+    static void mostrarCaracteres(char[] datos, int[] idx) {
+        System.out.print("[");
+        for (int i = 0; i < idx.length; i++) {
+            System.out.print(datos[idx[i]]);
+            if (i < idx.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+
+    static class Alumno implements Comparable<Alumno> {
+        private String nombre;
+        private double promedio;
+
+        public Alumno(String nombre, double promedio) {
+            this.nombre = nombre;
+            this.promedio = promedio;
+        }
+
+        public String getNombre() { return nombre; }
+        public double getPromedio() { return promedio; }
+
+        @Override
+        public int compareTo(Alumno otro) {
+            return Double.compare(this.promedio, otro.promedio);
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + promedio + ")";
+        }
+    }
+
+    static class MergeSortIndirecto<T extends Comparable<T>> {
+        private T[] datos;
+        private int[] indices;
+
+        public MergeSortIndirecto(T[] datos) {
+            this.datos = datos;
+            this.indices = new int[datos.length];
+            for (int i = 0; i < indices.length; i++) {
+                indices[i] = i;
+            }
+        }
+
+        public void ordenar() {
+            ordenar(0, indices.length - 1);
+        }
+
+        private void ordenar(int izq, int der) {
+            if (izq >= der) return;
+            int medio = (izq + der) / 2;
+            ordenar(izq, medio);
+            ordenar(medio + 1, der);
+            mezclar(izq, medio, der);
+        }
+
+        private void mezclar(int izq, int medio, int der) {
+            int[] izqIdx = Arrays.copyOfRange(indices, izq, medio + 1);
+            int[] derIdx = Arrays.copyOfRange(indices, medio + 1, der + 1);
+            int i = 0, j = 0, k = izq;
+
+            while (i < izqIdx.length && j < derIdx.length) {
+                if (datos[izqIdx[i]].compareTo(datos[derIdx[j]]) <= 0) indices[k++] = izqIdx[i++];
+                else                                                   indices[k++] = derIdx[j++];
+            }
+            while (i < izqIdx.length) indices[k++] = izqIdx[i++];
+            while (j < derIdx.length) indices[k++] = derIdx[j++];
+        }
+
+        public void mostrarOriginal() {
+            System.out.println(Arrays.toString(datos));
+        }
+
+        public void mostrarIndices() {
+            System.out.println(Arrays.toString(indices));
+        }
+
+        public void mostrarOrdenado() {
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < indices.length; i++) {
+                sb.append(datos[indices[i]]);
+                if (i < indices.length - 1) sb.append(", ");
+            }
+            sb.append("]");
+            System.out.println(sb);
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+        System.out.println("=== ESTRUCTURADA ===");
+
+        int[] numeros = {64, 34, 25, 12, 22, 11, 90};
+        int[] idxNum = crearIndices(numeros.length);
+        mergeSortIndirectoEnteros(numeros, idxNum, 0, numeros.length - 1);
+        System.out.println("Enteros originales: " + Arrays.toString(numeros));
+        System.out.println("Índices:            " + Arrays.toString(idxNum));
+        System.out.print("Enteros ordenados:  ");
+        mostrarEnteros(numeros, idxNum);
+
+        char[] letras = {'m', 'z', 'a', 'k', 'c'};
+        int[] idxLet = crearIndices(letras.length);
+        mergeSortIndirectoCaracteres(letras, idxLet, 0, letras.length - 1);
+        System.out.println("\nChars originales:   " + Arrays.toString(letras));
+        System.out.println("Índices:            " + Arrays.toString(idxLet));
+        System.out.print("Chars ordenados:    ");
+        mostrarCaracteres(letras, idxLet);
+
+        System.out.println("\n=== POO ===");
+
+        Integer[] enteros = {5, 3, 8, 1, 9, 2};
+        MergeSortIndirecto<Integer> msEnteros = new MergeSortIndirecto<>(enteros);
+        msEnteros.ordenar();
+        System.out.print("Enteros originales: ");
+        msEnteros.mostrarOriginal();
+        System.out.print("Índices:            ");
+        msEnteros.mostrarIndices();
+        System.out.print("Enteros ordenados:  ");
+        msEnteros.mostrarOrdenado();
+
+        Character[] caracteres = {'x', 'b', 'q', 'a'};
+        MergeSortIndirecto<Character> msChars = new MergeSortIndirecto<>(caracteres);
+        msChars.ordenar();
+        System.out.print("\nChars originales:   ");
+        msChars.mostrarOriginal();
+        System.out.print("Índices:            ");
+        msChars.mostrarIndices();
+        System.out.print("Chars ordenados:    ");
+        msChars.mostrarOrdenado();
+
+        Alumno[] alumnos = {
+            new Alumno("Ana", 9.5),
+            new Alumno("Luis", 7.8),
+            new Alumno("Marta", 8.6),
+            new Alumno("Pedro", 6.9)
+        };
+        MergeSortIndirecto<Alumno> msAlumnos = new MergeSortIndirecto<>(alumnos);
+        msAlumnos.ordenar();
+        System.out.print("\nAlumnos originales: ");
+        msAlumnos.mostrarOriginal();
+        System.out.print("Índices:            ");
+        msAlumnos.mostrarIndices();
+        System.out.print("Alumnos ordenados:  ");
+        msAlumnos.mostrarOrdenado();
+    }
+}

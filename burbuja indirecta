@@ -1,0 +1,194 @@
+import java.util.Arrays;
+
+
+public class BurbujaIndirecta {
+
+    static int[] crearIndices(int n) {
+        int[] idx = new int[n];
+        for (int i = 0; i < n; i++) {
+            idx[i] = i;
+        }
+        return idx;
+    }
+
+    
+    static void burbujaIndirectaEnteros(int[] datos, int[] idx) {
+        for (int i = 0; i < idx.length - 1; i++) {
+            boolean huboCambio = false;
+            for (int j = 0; j < idx.length - 1 - i; j++) {
+            
+                if (datos[idx[j]] > datos[idx[j + 1]]) {
+                    int temp = idx[j];
+                    idx[j] = idx[j + 1];
+                    idx[j + 1] = temp;
+                    huboCambio = true;
+                }
+            }
+            if (!huboCambio) break;
+        }
+    }
+
+    static void mostrarEnteros(int[] datos, int[] idx) {
+        System.out.print("[");
+        for (int i = 0; i < idx.length; i++) {
+            System.out.print(datos[idx[i]]);
+            if (i < idx.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+
+    static void burbujaIndirectaCaracteres(char[] datos, int[] idx) {
+        for (int i = 0; i < idx.length - 1; i++) {
+            boolean huboCambio = false;
+            for (int j = 0; j < idx.length - 1 - i; j++) {
+                if (datos[idx[j]] > datos[idx[j + 1]]) {
+                    int temp = idx[j];
+                    idx[j] = idx[j + 1];
+                    idx[j + 1] = temp;
+                    huboCambio = true;
+                }
+            }
+            if (!huboCambio) break;
+        }
+    }
+
+    static void mostrarCaracteres(char[] datos, int[] idx) {
+        System.out.print("[");
+        for (int i = 0; i < idx.length; i++) {
+            System.out.print(datos[idx[i]]);
+            if (i < idx.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+
+    static class Alumno implements Comparable<Alumno> {
+        private String nombre;
+        private double promedio;
+
+        public Alumno(String nombre, double promedio) {
+            this.nombre = nombre;
+            this.promedio = promedio;
+        }
+
+        public String getNombre() { return nombre; }
+        public double getPromedio() { return promedio; }
+
+        @Override
+        public int compareTo(Alumno otro) {
+            return Double.compare(this.promedio, otro.promedio);
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + promedio + ")";
+        }
+    }
+
+
+    static class BurbujaIndirecta<T extends Comparable<T>> {
+        private T[] datos;
+        private int[] indices;
+
+        public BurbujaIndirecta(T[] datos) {
+            this.datos = datos;
+            this.indices = new int[datos.length];
+            for (int i = 0; i < indices.length; i++) {
+                indices[i] = i;
+            }
+        }
+
+        public void ordenar() {
+            for (int i = 0; i < indices.length - 1; i++) {
+                boolean huboCambio = false;
+                for (int j = 0; j < indices.length - 1 - i; j++) {
+                    if (datos[indices[j]].compareTo(datos[indices[j + 1]]) > 0) {
+                        int temp = indices[j];
+                        indices[j] = indices[j + 1];
+                        indices[j + 1] = temp;
+                        huboCambio = true;
+                    }
+                }
+                if (!huboCambio) break;
+            }
+        }
+
+        public void mostrarOriginal() {
+            System.out.println(Arrays.toString(datos));
+        }
+
+        public void mostrarIndices() {
+            System.out.println(Arrays.toString(indices));
+        }
+
+        public void mostrarOrdenado() {
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < indices.length; i++) {
+                sb.append(datos[indices[i]]);
+                if (i < indices.length - 1) sb.append(", ");
+            }
+            sb.append("]");
+            System.out.println(sb);
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+        System.out.println("=== ESTRUCTURADA ===");
+
+        int[] numeros = {64, 34, 25, 12, 22, 11, 90};
+        int[] idxNum = crearIndices(numeros.length);
+        burbujaIndirectaEnteros(numeros, idxNum);
+        System.out.println("Enteros originales: " + Arrays.toString(numeros));
+        System.out.println("Índices:            " + Arrays.toString(idxNum));
+        System.out.print("Enteros ordenados:  ");
+        mostrarEnteros(numeros, idxNum);
+
+        char[] letras = {'m', 'z', 'a', 'k', 'c'};
+        int[] idxLet = crearIndices(letras.length);
+        burbujaIndirectaCaracteres(letras, idxLet);
+        System.out.println("\nChars originales:   " + Arrays.toString(letras));
+        System.out.println("Índices:            " + Arrays.toString(idxLet));
+        System.out.print("Chars ordenados:    ");
+        mostrarCaracteres(letras, idxLet);
+
+        System.out.println("\n=== POO ===");
+
+        Integer[] enteros = {5, 3, 8, 1, 9, 2};
+        BurbujaIndirecta<Integer> bEnteros = new BurbujaIndirecta<>(enteros);
+        bEnteros.ordenar();
+        System.out.print("Enteros originales: ");
+        bEnteros.mostrarOriginal();
+        System.out.print("Índices:            ");
+        bEnteros.mostrarIndices();
+        System.out.print("Enteros ordenados:  ");
+        bEnteros.mostrarOrdenado();
+
+        Character[] caracteres = {'x', 'b', 'q', 'a'};
+        BurbujaIndirecta<Character> bChars = new BurbujaIndirecta<>(caracteres);
+        bChars.ordenar();
+        System.out.print("\nChars originales:   ");
+        bChars.mostrarOriginal();
+        System.out.print("Índices:            ");
+        bChars.mostrarIndices();
+        System.out.print("Chars ordenados:    ");
+        bChars.mostrarOrdenado();
+
+        Alumno[] alumnos = {
+            new Alumno("Ana", 9.5),
+            new Alumno("Luis", 7.8),
+            new Alumno("Marta", 8.6),
+            new Alumno("Pedro", 6.9)
+        };
+        BurbujaIndirecta<Alumno> bAlumnos = new BurbujaIndirecta<>(alumnos);
+        bAlumnos.ordenar();
+        System.out.print("\nAlumnos originales: ");
+        bAlumnos.mostrarOriginal();
+        System.out.print("Índices:            ");
+        bAlumnos.mostrarIndices();
+        System.out.print("Alumnos ordenados:  ");
+        bAlumnos.mostrarOrdenado();
+    }
+}

@@ -1,0 +1,150 @@
+import java.util.Arrays;
+
+public class MergeSortDemo {
+
+
+    static void mergeSortEnteros(int[] a, int izq, int der) {
+        if (izq >= der) return; // caso base: 0 o 1 elemento
+        int medio = (izq + der) / 2;
+        mergeSortEnteros(a, izq, medio);
+        mergeSortEnteros(a, medio + 1, der);
+        mezclarEnteros(a, izq, medio, der);
+    }
+
+    static void mezclarEnteros(int[] a, int izq, int medio, int der) {
+        int[] izqArr = Arrays.copyOfRange(a, izq, medio + 1);
+        int[] derArr = Arrays.copyOfRange(a, medio + 1, der + 1);
+        int i = 0, j = 0, k = izq;
+
+        while (i < izqArr.length && j < derArr.length) {
+            if (izqArr[i] <= derArr[j]) a[k++] = izqArr[i++];
+            else                        a[k++] = derArr[j++];
+        }
+        while (i < izqArr.length) a[k++] = izqArr[i++];
+        while (j < derArr.length) a[k++] = derArr[j++];
+    }
+
+    // ---------- Caracteres ----------
+    static void mergeSortCaracteres(char[] a, int izq, int der) {
+        if (izq >= der) return;
+        int medio = (izq + der) / 2;
+        mergeSortCaracteres(a, izq, medio);
+        mergeSortCaracteres(a, medio + 1, der);
+        mezclarCaracteres(a, izq, medio, der);
+    }
+
+    static void mezclarCaracteres(char[] a, int izq, int medio, int der) {
+        char[] izqArr = Arrays.copyOfRange(a, izq, medio + 1);
+        char[] derArr = Arrays.copyOfRange(a, medio + 1, der + 1);
+        int i = 0, j = 0, k = izq;
+
+        while (i < izqArr.length && j < derArr.length) {
+            if (izqArr[i] <= derArr[j]) a[k++] = izqArr[i++];
+            else                        a[k++] = derArr[j++];
+        }
+        while (i < izqArr.length) a[k++] = izqArr[i++];
+        while (j < derArr.length) a[k++] = derArr[j++];
+    }
+
+
+    static class Alumno implements Comparable<Alumno> {
+        private String nombre;
+        private double promedio;
+
+        public Alumno(String nombre, double promedio) {
+            this.nombre = nombre;
+            this.promedio = promedio;
+        }
+
+        public String getNombre() { return nombre; }
+        public double getPromedio() { return promedio; }
+
+        @Override
+        public int compareTo(Alumno otro) {
+            return Double.compare(this.promedio, otro.promedio);
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + promedio + ")";
+        }
+    }
+
+    static class MergeSort<T extends Comparable<T>> {
+        private T[] datos;
+
+        public MergeSort(T[] datos) {
+            this.datos = datos;
+        }
+
+        public void ordenar() {
+            ordenar(0, datos.length - 1);
+        }
+
+        private void ordenar(int izq, int der) {
+            if (izq >= der) return;
+            int medio = (izq + der) / 2;
+            ordenar(izq, medio);
+            ordenar(medio + 1, der);
+            mezclar(izq, medio, der);
+        }
+
+        private void mezclar(int izq, int medio, int der) {
+            T[] izqArr = Arrays.copyOfRange(datos, izq, medio + 1);
+            T[] derArr = Arrays.copyOfRange(datos, medio + 1, der + 1);
+            int i = 0, j = 0, k = izq;
+
+            while (i < izqArr.length && j < derArr.length) {
+                if (izqArr[i].compareTo(derArr[j]) <= 0) datos[k++] = izqArr[i++];
+                else                                     datos[k++] = derArr[j++];
+            }
+            while (i < izqArr.length) datos[k++] = izqArr[i++];
+            while (j < derArr.length) datos[k++] = derArr[j++];
+        }
+
+        public void mostrar() {
+            System.out.println(Arrays.toString(datos));
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+        System.out.println("=== ESTRUCTURADA ===");
+
+        int[] numeros = {64, 34, 25, 12, 22, 11, 90};
+        System.out.println("Enteros antes:   " + Arrays.toString(numeros));
+        mergeSortEnteros(numeros, 0, numeros.length - 1);
+        System.out.println("Enteros después: " + Arrays.toString(numeros));
+
+        char[] letras = {'m', 'z', 'a', 'k', 'c'};
+        System.out.println("Chars antes:     " + Arrays.toString(letras));
+        mergeSortCaracteres(letras, 0, letras.length - 1);
+        System.out.println("Chars después:   " + Arrays.toString(letras));
+
+        System.out.println("\n=== POO ===");
+
+        Integer[] enteros = {5, 3, 8, 1, 9, 2};
+        MergeSort<Integer> msEnteros = new MergeSort<>(enteros);
+        msEnteros.ordenar();
+        System.out.print("Enteros:    ");
+        msEnteros.mostrar();
+
+        Character[] caracteres = {'x', 'b', 'q', 'a'};
+        MergeSort<Character> msChars = new MergeSort<>(caracteres);
+        msChars.ordenar();
+        System.out.print("Caracteres: ");
+        msChars.mostrar();
+
+        Alumno[] alumnos = {
+            new Alumno("Ana", 9.5),
+            new Alumno("Luis", 7.8),
+            new Alumno("Marta", 8.6),
+            new Alumno("Pedro", 6.9)
+        };
+        MergeSort<Alumno> msAlumnos = new MergeSort<>(alumnos);
+        msAlumnos.ordenar();
+        System.out.print("Alumnos:    ");
+        msAlumnos.mostrar();
+    }
+}

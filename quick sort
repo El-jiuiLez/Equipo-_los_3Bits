@@ -1,0 +1,166 @@
+import java.util.Arrays;
+
+public class QuickSortDemo {
+
+
+    static void quickSortEnteros(int[] a, int bajo, int alto) {
+        if (bajo < alto) {
+            int p = particionEnteros(a, bajo, alto);
+            quickSortEnteros(a, bajo, p - 1);
+            quickSortEnteros(a, p + 1, alto);
+        }
+    }
+
+    static int particionEnteros(int[] a, int bajo, int alto) {
+        int pivote = a[alto]; 
+        int i = bajo - 1;
+
+        for (int j = bajo; j < alto; j++) {
+            if (a[j] <= pivote) {
+                i++;
+                int temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+        }
+    
+        int temp = a[i + 1];
+        a[i + 1] = a[alto];
+        a[alto] = temp;
+        return i + 1;
+    }
+
+  
+    static void quickSortCaracteres(char[] a, int bajo, int alto) {
+        if (bajo < alto) {
+            int p = particionCaracteres(a, bajo, alto);
+            quickSortCaracteres(a, bajo, p - 1);
+            quickSortCaracteres(a, p + 1, alto);
+        }
+    }
+
+    static int particionCaracteres(char[] a, int bajo, int alto) {
+        char pivote = a[alto];
+        int i = bajo - 1;
+
+        for (int j = bajo; j < alto; j++) {
+            if (a[j] <= pivote) {
+                i++;
+                char temp = a[i];
+                a[i] = a[j];
+                a[j] = temp;
+            }
+        }
+        char temp = a[i + 1];
+        a[i + 1] = a[alto];
+        a[alto] = temp;
+        return i + 1;
+    }
+
+    static class Alumno implements Comparable<Alumno> {
+        private String nombre;
+        private double promedio;
+
+        public Alumno(String nombre, double promedio) {
+            this.nombre = nombre;
+            this.promedio = promedio;
+        }
+
+        public String getNombre() { return nombre; }
+        public double getPromedio() { return promedio; }
+
+        @Override
+        public int compareTo(Alumno otro) {
+            return Double.compare(this.promedio, otro.promedio);
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + promedio + ")";
+        }
+    }
+
+    static class QuickSort<T extends Comparable<T>> {
+        private T[] datos;
+
+        public QuickSort(T[] datos) {
+            this.datos = datos;
+        }
+
+        public void ordenar() {
+            ordenar(0, datos.length - 1);
+        }
+
+        private void ordenar(int bajo, int alto) {
+            if (bajo < alto) {
+                int p = particion(bajo, alto);
+                ordenar(bajo, p - 1);
+                ordenar(p + 1, alto);
+            }
+        }
+
+        private int particion(int bajo, int alto) {
+            T pivote = datos[alto];
+            int i = bajo - 1;
+
+            for (int j = bajo; j < alto; j++) {
+                if (datos[j].compareTo(pivote) <= 0) {
+                    i++;
+                    intercambiar(i, j);
+                }
+            }
+            intercambiar(i + 1, alto);
+            return i + 1;
+        }
+
+        private void intercambiar(int i, int j) {
+            T temp = datos[i];
+            datos[i] = datos[j];
+            datos[j] = temp;
+        }
+
+        public void mostrar() {
+            System.out.println(Arrays.toString(datos));
+        }
+    }
+
+    public static void main(String[] args) {
+
+        System.out.println("=== ESTRUCTURADA ===");
+
+        int[] numeros = {64, 34, 25, 12, 22, 11, 90};
+        System.out.println("Enteros antes:   " + Arrays.toString(numeros));
+        quickSortEnteros(numeros, 0, numeros.length - 1);
+        System.out.println("Enteros después: " + Arrays.toString(numeros));
+
+        char[] letras = {'m', 'z', 'a', 'k', 'c'};
+        System.out.println("Chars antes:     " + Arrays.toString(letras));
+        quickSortCaracteres(letras, 0, letras.length - 1);
+        System.out.println("Chars después:   " + Arrays.toString(letras));
+
+        System.out.println("\n=== POO ===");
+
+        Integer[] enteros = {5, 3, 8, 1, 9, 2};
+        QuickSort<Integer> qsEnteros = new QuickSort<>(enteros);
+        qsEnteros.ordenar();
+        System.out.print("Enteros:    ");
+        qsEnteros.mostrar();
+
+        Character[] caracteres = {'x', 'b', 'q', 'a'};
+        QuickSort<Character> qsChars = new QuickSort<>(caracteres);
+        qsChars.ordenar();
+        System.out.print("Caracteres: ");
+        qsChars.mostrar();
+
+        Alumno[] alumnos = {
+            new Alumno("Ana", 9.5),
+            new Alumno("Luis", 7.8),
+            new Alumno("Marta", 8.6),
+            new Alumno("Pedro", 6.9)
+        };
+        QuickSort<Alumno> qsAlumnos = new QuickSort<>(alumnos);
+        qsAlumnos.ordenar();
+        System.out.print("Alumnos:    ");
+        qsAlumnos.mostrar();
+    }
+}

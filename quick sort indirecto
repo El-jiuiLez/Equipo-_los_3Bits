@@ -1,0 +1,230 @@
+import java.util.Arrays;
+
+
+public class QuickSortIndirecto {
+
+
+    static int[] crearIndices(int n) {
+        int[] idx = new int[n];
+        for (int i = 0; i < n; i++) {
+            idx[i] = i;
+        }
+        return idx;
+    }
+
+    static void intercambiar(int[] idx, int i, int j) {
+        int temp = idx[i];
+        idx[i] = idx[j];
+        idx[j] = temp;
+    }
+
+    static void quickSortIndirectoEnteros(int[] datos, int[] idx, int bajo, int alto) {
+        if (bajo < alto) {
+            int p = particionIndirectaEnteros(datos, idx, bajo, alto);
+            quickSortIndirectoEnteros(datos, idx, bajo, p - 1);
+            quickSortIndirectoEnteros(datos, idx, p + 1, alto);
+        }
+    }
+
+    static int particionIndirectaEnteros(int[] datos, int[] idx, int bajo, int alto) {
+        int pivote = datos[idx[alto]]; // el dato al que apunta el último índice
+        int i = bajo - 1;
+
+        for (int j = bajo; j < alto; j++) {
+            
+            if (datos[idx[j]] <= pivote) {
+                i++;
+                intercambiar(idx, i, j);
+            }
+        }
+        intercambiar(idx, i + 1, alto);
+        return i + 1;
+    }
+
+    static void mostrarEnteros(int[] datos, int[] idx) {
+        System.out.print("[");
+        for (int i = 0; i < idx.length; i++) {
+            System.out.print(datos[idx[i]]);
+            if (i < idx.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+
+    static void quickSortIndirectoCaracteres(char[] datos, int[] idx, int bajo, int alto) {
+        if (bajo < alto) {
+            int p = particionIndirectaCaracteres(datos, idx, bajo, alto);
+            quickSortIndirectoCaracteres(datos, idx, bajo, p - 1);
+            quickSortIndirectoCaracteres(datos, idx, p + 1, alto);
+        }
+    }
+
+    static int particionIndirectaCaracteres(char[] datos, int[] idx, int bajo, int alto) {
+        char pivote = datos[idx[alto]];
+        int i = bajo - 1;
+
+        for (int j = bajo; j < alto; j++) {
+            if (datos[idx[j]] <= pivote) {
+                i++;
+                intercambiar(idx, i, j);
+            }
+        }
+        intercambiar(idx, i + 1, alto);
+        return i + 1;
+    }
+
+    static void mostrarCaracteres(char[] datos, int[] idx) {
+        System.out.print("[");
+        for (int i = 0; i < idx.length; i++) {
+            System.out.print(datos[idx[i]]);
+            if (i < idx.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+    static class Alumno implements Comparable<Alumno> {
+        private String nombre;
+        private double promedio;
+
+        public Alumno(String nombre, double promedio) {
+            this.nombre = nombre;
+            this.promedio = promedio;
+        }
+
+        public String getNombre() { return nombre; }
+        public double getPromedio() { return promedio; }
+
+        @Override
+        public int compareTo(Alumno otro) {
+            return Double.compare(this.promedio, otro.promedio);
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + promedio + ")";
+        }
+    }
+
+    // Clase genérica: guarda los datos y un arreglo de índices
+    static class QuickSortIndirecto<T extends Comparable<T>> {
+        private T[] datos;
+        private int[] indices;
+
+        public QuickSortIndirecto(T[] datos) {
+            this.datos = datos;
+            this.indices = new int[datos.length];
+            for (int i = 0; i < indices.length; i++) {
+                indices[i] = i;
+            }
+        }
+
+        public void ordenar() {
+            ordenar(0, indices.length - 1);
+        }
+
+        private void ordenar(int bajo, int alto) {
+            if (bajo < alto) {
+                int p = particion(bajo, alto);
+                ordenar(bajo, p - 1);
+                ordenar(p + 1, alto);
+            }
+        }
+
+        private int particion(int bajo, int alto) {
+            T pivote = datos[indices[alto]];
+            int i = bajo - 1;
+
+            for (int j = bajo; j < alto; j++) {
+                if (datos[indices[j]].compareTo(pivote) <= 0) {
+                    i++;
+                    intercambiar(i, j);
+                }
+            }
+            intercambiar(i + 1, alto);
+            return i + 1;
+        }
+
+        private void intercambiar(int i, int j) {
+            int temp = indices[i];
+            indices[i] = indices[j];
+            indices[j] = temp;
+        }
+
+        public void mostrarOriginal() {
+            System.out.println(Arrays.toString(datos));
+        }
+
+        public void mostrarIndices() {
+            System.out.println(Arrays.toString(indices));
+        }
+
+        public void mostrarOrdenado() {
+            StringBuilder sb = new StringBuilder("[");
+            for (int i = 0; i < indices.length; i++) {
+                sb.append(datos[indices[i]]);
+                if (i < indices.length - 1) sb.append(", ");
+            }
+            sb.append("]");
+            System.out.println(sb);
+        }
+    }
+
+
+    public static void main(String[] args) {
+
+        System.out.println("=== ESTRUCTURADA ===");
+
+        int[] numeros = {64, 34, 25, 12, 22, 11, 90};
+        int[] idxNum = crearIndices(numeros.length);
+        quickSortIndirectoEnteros(numeros, idxNum, 0, numeros.length - 1);
+        System.out.println("Enteros originales: " + Arrays.toString(numeros));
+        System.out.println("Índices:            " + Arrays.toString(idxNum));
+        System.out.print("Enteros ordenados:  ");
+        mostrarEnteros(numeros, idxNum);
+
+        char[] letras = {'m', 'z', 'a', 'k', 'c'};
+        int[] idxLet = crearIndices(letras.length);
+        quickSortIndirectoCaracteres(letras, idxLet, 0, letras.length - 1);
+        System.out.println("\nChars originales:   " + Arrays.toString(letras));
+        System.out.println("Índices:            " + Arrays.toString(idxLet));
+        System.out.print("Chars ordenados:    ");
+        mostrarCaracteres(letras, idxLet);
+
+        System.out.println("\n=== POO ===");
+
+        Integer[] enteros = {5, 3, 8, 1, 9, 2};
+        QuickSortIndirecto<Integer> qsEnteros = new QuickSortIndirecto<>(enteros);
+        qsEnteros.ordenar();
+        System.out.print("Enteros originales: ");
+        qsEnteros.mostrarOriginal();
+        System.out.print("Índices:            ");
+        qsEnteros.mostrarIndices();
+        System.out.print("Enteros ordenados:  ");
+        qsEnteros.mostrarOrdenado();
+
+        Character[] caracteres = {'x', 'b', 'q', 'a'};
+        QuickSortIndirecto<Character> qsChars = new QuickSortIndirecto<>(caracteres);
+        qsChars.ordenar();
+        System.out.print("\nChars originales:   ");
+        qsChars.mostrarOriginal();
+        System.out.print("Índices:            ");
+        qsChars.mostrarIndices();
+        System.out.print("Chars ordenados:    ");
+        qsChars.mostrarOrdenado();
+
+        Alumno[] alumnos = {
+            new Alumno("Ana", 9.5),
+            new Alumno("Luis", 7.8),
+            new Alumno("Marta", 8.6),
+            new Alumno("Pedro", 6.9)
+        };
+        QuickSortIndirecto<Alumno> qsAlumnos = new QuickSortIndirecto<>(alumnos);
+        qsAlumnos.ordenar();
+        System.out.print("\nAlumnos originales: ");
+        qsAlumnos.mostrarOriginal();
+        System.out.print("Índices:            ");
+        qsAlumnos.mostrarIndices();
+        System.out.print("Alumnos ordenados:  ");
+        qsAlumnos.mostrarOrdenado();
+    }
+}
